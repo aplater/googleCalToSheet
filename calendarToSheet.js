@@ -1,9 +1,4 @@
 function calendarToSheet() {
-  /*
-  Fetches the events from XR Sweden's Google calendars and puts these into the
-  Google Sheet 'Automated National Calendar' under 'Extinction Rebellion Sverige'
-  in XR Sweden's Google Drive.
-  */
   
   // Reset the spreadsheet, no information from previous version is stored
   var ssFile = DriveApp.getFilesByName('Automated National Calendar').next();
@@ -15,11 +10,7 @@ function calendarToSheet() {
   const BOLD_TEXT_STYLE = SpreadsheetApp.newTextStyle().setBold(true).build();
   const WEEKEND_COLOR = '#b7e1cd';
   const MS_PER_DAY = 1000*60*60*24;
-  
-  // Add info about how the sheet is generated
-  sheet.getRange(1,2).setValue("This sheet syncs automatically with XR Sweden's Google Calendars once per hour");
-  sheet.getRange(1,2).setFontStyle('italic');
-  
+    
   // Get calendars, only include visible and self-owned calendars
   var allCalendars = CalendarApp.getAllCalendars();
   var calendars = [];
@@ -30,7 +21,7 @@ function calendarToSheet() {
   }
   
   // Create headers 'DATE - CALENDAR 1 - CALENDAR 2 - ...'
-  var headerRow = 3;
+  var headerRow = 1;
   var headerCol = 1;
   sheet.getRange(headerRow,headerCol).setValue('DATE');
   for each (c in calendars) {
@@ -39,7 +30,7 @@ function calendarToSheet() {
     sheet.getRange(headerRow,headerCol).setBackground(c.getColor());
   }
   sheet.getRange(headerRow,1,1,headerCol).setFontWeight('bold');
-  //sheet.setFrozenRows(headerRow);
+  sheet.setFrozenRows(headerRow);
   
   
   // Include events happening between calendarStart and calendarEnd, inclusive
@@ -61,7 +52,7 @@ function calendarToSheet() {
     currentRow++;
   }
   sheet.getRange(calendarStartRow,1,currentRow - calendarStartRow).setHorizontalAlignment('right');
-  //sheet.setFrozenColumns(1);
+  sheet.setFrozenColumns(1);
   
   // Go through each calendar and add its events
   var col = 1;
